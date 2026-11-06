@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Fraseologia - Devolução para Estoque</title>
+
+  <!-- Tema anti-flash: precisa executar ANTES do CSS ser aplicado -->
+  <script src="../js/theme.js"></script>
+
+  <link rel="icon" type="image/x-icon" href="../assets/images/serasa_favicon.ico">
+  <link rel="stylesheet" href="../css/style.css">
+
+</head>
+
+<body>
+<!-- HEADER (topo + menu) carregado dinamicamente -->
+  <div id="header-placeholder"></div>
+
+  <!-- CONTEÚDO ESPECÍFICO DA PÁGINA -->
+  <div class="card">
+    <h1>Devolução para Estoque</h1>
+
+    <div class="info-link">
+      📌 <strong>Formulário de devolução para o estoque:</strong> 
+      <a href="https://experian.service-now.com/now/nav/ui/classic/params/target/com.glideapp.servicecatalog_cat_item_view.do%3Fv%3D1%26sysparm_id%3D758ccd009307791467ce3024fbba1063" target="_blank">Clique Aqui</a>
+    </div>
+
+    <p>Preencha todos os campos e clique em "Gerar Log".</p>
+
+    <div class="dica">
+      ⚠️ <strong>Atenção:</strong> Para devolução de equipamentos, abra o formulário acima antes de registrar o log.
+    </div>
+    <hr>
+
+    <div class="form-grid">
+      <div class="form-group">
+        <label>📝 Motivo da Devolução</label>
+        <textarea id="Motivo" rows="4" placeholder="Descreva o motivo da devolução..."></textarea>
+      </div>
+      <div class="form-group">
+        <label>🏷️ Ativo (Patrimônio)</label>
+        <input type="text" id="Ativo" placeholder="Número do ativo">
+      </div>
+      <div class="form-group">
+        <label>🔢 S/N</label>
+        <input type="text" id="SN" placeholder="Número de série">
+      </div>
+      <div class="form-group">
+        <label>📦 Item(ns) devolvido(s)</label>
+        <input type="text" id="Itens" placeholder="Ex: Computador, monitor, teclado">
+      </div>
+      <div class="form-group">
+        <label>👤 Colaborador</label>
+        <input type="text" id="Colaborador" placeholder="Nome completo">
+      </div>
+      <div class="form-group">
+        <label>🔑 Login</label>
+        <input type="text" id="Login" placeholder="Login de rede">
+      </div>
+      <div class="form-group">
+        <label>📧 E-Mail</label>
+        <input type="email" id="Email" placeholder="email@empresa.com">
+      </div>
+    </div>
+
+    <div class="button-group">
+      <button class="btn btn-primary" onclick="gerarLog()">📋 Gerar Log</button>
+      <button class="btn btn-secondary" onclick="copiarLog()">📄 Copiar Log</button>
+      <button class="btn btn-secondary" onclick="limparFormulario()">🗑️ Limpar</button>
+    </div>
+  </div>
+
+  <!-- LOG -->
+  <div class="card">
+    <h3>📝 Log gerado (copie e cole no chamado)</h3>
+    <div class="log-preview" id="Log">
+      Clique em "Gerar Log" para começar
+    </div>
+  </div>
+
+  <!-- FOOTER carregado dinamicamente -->
+  <div id="footer-placeholder"></div>
+
+</div>
+
+<!-- DARK MODE -->
+<button id="darkModeToggle"
+        class="btn-toggle-dark-fixed"
+        onclick="toggleDarkMode()">
+  🌙 Dark Mode
+</button>
+
+<script src="../js/main.js"></script>
+<script src="../js/components.js"></script>
+
+<script>
+window.gerarLog = function() {
+  if (!validarCamposObrigatorios()) return;
+
+  const motivo = document.getElementById('Motivo').value.trim();
+  const ativo = document.getElementById('Ativo').value.trim();
+  const sn = document.getElementById('SN').value.trim();
+  const itens = document.getElementById('Itens').value.trim();
+  const colaborador = document.getElementById('Colaborador').value.trim();
+  const login = document.getElementById('Login').value.trim();
+  const email = document.getElementById('Email').value.trim();
+
+  if (!motivo && !ativo && !sn && !itens && !colaborador && !login && !email) {
+    mostrarToast('⚠️ Preencha pelo menos um campo antes de gerar o log!', 'warning');
+    return;
+  }
+
+  let logTexto = '';
+  if (motivo) logTexto += `Devolução pelo Motivo: ${motivo}\n\n`;
+  if (ativo) logTexto += `Ativo: ${ativo}\n`;
+  if (sn) logTexto += `S/N: ${sn}\n`;
+  if (itens) logTexto += `Item(ns) devolvido(s): ${itens}\n`;
+  if (colaborador) logTexto += `Colaborador: ${colaborador}\n`;
+  if (login) logTexto += `Login: ${login}\n`;
+  if (email) logTexto += `Email: ${email}`;
+
+  logTexto = logTexto.trim();
+
+  document.getElementById('Log').innerHTML = logTexto.replace(/\n/g, '<br>');
+  mostrarToast('✅ Log gerado!', 'success');
+};
+</script>
+
+</body>
+</html>

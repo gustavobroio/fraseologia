@@ -1,0 +1,544 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Fraseologia - Gerador de Senha</title>
+
+  <!-- Tema anti-flash: precisa executar ANTES do CSS ser aplicado -->
+  <script src="../js/theme.js"></script>
+
+  <link rel="icon" type="image/x-icon" href="../assets/images/serasa_favicon.ico">
+  <link rel="stylesheet" href="../css/style.css">
+
+  <style>
+    .password-container {
+      background: var(--bg-card);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-md);
+      margin-bottom: 1.5rem;
+      overflow: hidden;
+    }
+    .password-display {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      padding: 1rem 1.5rem;
+      border-bottom: 1px solid var(--border);
+    }
+    .password-display .password-input {
+      flex: 1;
+    }
+    .password-display .password-input input {
+      width: 100%;
+      font-family: 'SF Mono', 'Fira Code', monospace;
+      font-size: 1.15rem;
+      border: none;
+      background: #f8f9fa;
+      color: #000000;
+      outline: none;
+      cursor: default;
+      user-select: none;
+      font-weight: 700;
+      border-radius: 8px;
+      padding: 0.5rem;
+      text-align: center;
+    }
+    html.dark-mode .password-display .password-input input {
+      background: #1e293b;
+      color: #ffffff;
+      font-weight: 600;
+    }
+    .security-bar {
+      height: 6px;
+      background: var(--border);
+    }
+    .security-bar .bar {
+      height: 100%;
+      width: 0%;
+      transition: width 0.2s;
+    }
+    .bar.critical { background: #dc3545; }
+    .bar.warning { background: #ffc107; }
+    .bar.safe { background: #28a745; }
+
+    .password-actions {
+      display: flex;
+      justify-content: center;
+      gap: 1rem;
+      padding: 1rem 1.5rem;
+      border-top: 1px solid var(--border);
+      background: var(--bg-card);
+    }
+    .password-actions button {
+      background: transparent;
+      border: 1px solid var(--border);
+      cursor: pointer;
+      padding: 0.5rem 1rem;
+      border-radius: 9999px;
+      transition: background 0.2s;
+      font-size: 1rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      color: var(--text-primary);
+    }
+    .password-actions button:hover {
+      background: var(--border);
+    }
+
+    /* ========== GESTÃO DE TÉCNICOS ========== */
+    .campo-ajuda {
+      font-size: 0.75rem;
+      color: var(--text-secondary);
+      font-weight: 400;
+      text-transform: none;
+      letter-spacing: 0;
+    }
+    .tecnicos-gestao {
+      margin-top: 1.5rem;
+      padding-top: 1.25rem;
+      border-top: 1px dashed var(--border);
+    }
+    .tecnicos-gestao-titulo {
+      display: block;
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: var(--text-secondary);
+      margin-bottom: 0.75rem;
+    }
+    .tecnicos-gestao-linha {
+      display: flex;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+    }
+    .tecnicos-gestao-linha input {
+      flex: 1;
+      min-width: 220px;
+      padding: 0.625rem 0.75rem;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      font-family: inherit;
+      font-size: 0.875rem;
+      background: var(--bg-card);
+      color: var(--text-primary);
+      transition: 0.15s;
+    }
+    .tecnicos-gestao-linha input:focus {
+      outline: none;
+      border-color: var(--secondary-light);
+      box-shadow: 0 0 0 3px rgba(0, 85, 160, 0.1);
+    }
+    .tecnicos-aviso {
+      font-size: 0.75rem;
+      color: var(--text-secondary);
+      margin-top: 0.75rem;
+    }
+    html.dark-mode .tecnicos-gestao-linha input::placeholder {
+      color: #cbd5e1;
+      opacity: 1;
+    }
+
+    .customize-panel {
+      background: var(--bg-card);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-md);
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+    }
+    .customize-panel h3 {
+      font-size: 1.25rem;
+      font-weight: 600;
+      margin-bottom: 1.25rem;
+      color: var(--text-primary);
+    }
+    .customize-controls {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 2rem;
+    }
+    .length-control {
+      flex: 1;
+      min-width: 180px;
+    }
+    .length-control label {
+      display: block;
+      font-size: 0.875rem;
+      font-weight: 500;
+      color: var(--text-secondary);
+      margin-bottom: 0.5rem;
+    }
+    .length-control input {
+      width: 100%;
+      margin: 0.5rem 0;
+    }
+    .checkboxes {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1.5rem;
+      align-items: center;
+    }
+    .checkbox-item {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      cursor: pointer;
+    }
+    .checkbox-item input {
+      width: 18px;
+      height: 18px;
+      cursor: pointer;
+      accent-color: var(--primary);
+    }
+    .checkbox-item span {
+      font-size: 0.875rem;
+      color: var(--text-primary);
+    }
+
+    @media (max-width: 640px) {
+      .password-display { flex-direction: column; align-items: stretch; }
+      .password-actions { justify-content: center; }
+    }
+  </style>
+</head>
+
+<body>
+<div class="container">
+
+  <!-- HEADER (topo + menu) carregado dinamicamente -->
+  <div id="header-placeholder"></div>
+
+  <!-- DADOS DO RESET -->
+  <div class="card">
+    <h1>Dados do reset</h1>
+
+    <div class="form-grid">
+      <div class="form-group">
+        <label for="usuarioInput">Usuário do colaborador</label>
+        <input type="text" id="usuarioInput" placeholder="C12345Q, SMP1234 ou nome.sobrenome" autocomplete="off">
+        <span class="campo-ajuda">Aceita LanID (ex.: C12345Q), SMP (ex.: SMP1234) ou nome.sobrenome.</span>
+      </div>
+
+      <div class="form-group">
+        <label for="tecnicoSelect">Técnico responsável</label>
+        <select id="tecnicoSelect"></select>
+        <span class="campo-ajuda">Técnico que entrará em contato com o colaborador.</span>
+      </div>
+    </div>
+
+    <!-- GESTÃO DA LISTA DE TÉCNICOS (rotatividade: adicionar / remover) -->
+    <div class="tecnicos-gestao">
+      <span class="tecnicos-gestao-titulo">Lista de técnicos</span>
+      <div class="tecnicos-gestao-linha">
+        <input type="text" id="novoTecnicoInput" placeholder="Nome do novo técnico" autocomplete="off">
+        <button type="button" id="addTecnicoBtn" class="btn btn-secondary">＋ Adicionar</button>
+        <button type="button" id="removeTecnicoBtn" class="btn btn-secondary">🗑 Remover selecionado</button>
+      </div>
+      <p class="tecnicos-aviso">A lista fica salva neste navegador (localStorage) — mantenha-a atualizada
+        conforme a rotatividade da equipe.</p>
+    </div>
+  </div>
+
+  <!-- CONTEÚDO ESPECÍFICO DO GERADOR -->
+  <div class="password-container">
+    <div class="password-display">
+      <div class="password-input">
+        <input type="text" id="passwordOutput" readonly>
+      </div>
+    </div>
+    <div class="security-bar">
+      <div id="securityBar" class="bar"></div>
+    </div>
+    <div class="password-actions">
+      <button id="renewBtn">🔄 Nova senha</button>
+      <button id="copyBtn">📋 Copiar resultado</button>
+    </div>
+  </div>
+
+  <div class="customize-panel">
+    <h3>⚙️ Personalizar senha</h3>
+    <div class="customize-controls">
+      <div class="length-control">
+        <label>Tamanho: <span id="lengthValue">12</span> caracteres</label>
+        <input type="range" id="lengthSlider" min="8" max="32" value="12">
+      </div>
+      <div class="checkboxes">
+        <label class="checkbox-item">
+          <input type="checkbox" id="uppercaseCheck" checked> <span>Maiúsculas (A-Z)</span>
+        </label>
+        <label class="checkbox-item">
+          <input type="checkbox" id="numbersCheck" checked> <span>Números (0-9)</span>
+        </label>
+        <label class="checkbox-item">
+          <input type="checkbox" id="symbolsCheck" checked> <span>Símbolos (@ # $)</span>
+        </label>
+      </div>
+    </div>
+  </div>
+
+  <!-- FOOTER carregado dinamicamente -->
+  <div id="footer-placeholder"></div>
+
+</div>
+
+<!-- DARK MODE -->
+<button id="darkModeToggle"
+        class="btn-toggle-dark-fixed"
+        onclick="toggleDarkMode()">
+  🌙 Dark Mode
+</button>
+
+<script src="../js/main.js"></script>
+<script src="../js/components.js"></script>
+
+<script>
+  const passwordOutput = document.getElementById('passwordOutput');
+  const lengthSlider = document.getElementById('lengthSlider');
+  const lengthValue = document.getElementById('lengthValue');
+  const uppercaseCheck = document.getElementById('uppercaseCheck');
+  const numbersCheck = document.getElementById('numbersCheck');
+  const symbolsCheck = document.getElementById('symbolsCheck');
+  const securityBar = document.getElementById('securityBar');
+  const renewBtn = document.getElementById('renewBtn');
+  const copyBtn = document.getElementById('copyBtn');
+
+  const usuarioInput = document.getElementById('usuarioInput');
+  const tecnicoSelect = document.getElementById('tecnicoSelect');
+  const novoTecnicoInput = document.getElementById('novoTecnicoInput');
+  const addTecnicoBtn = document.getElementById('addTecnicoBtn');
+  const removeTecnicoBtn = document.getElementById('removeTecnicoBtn');
+
+  const lowerCase = 'abcdefghijklmnopqrstuvwxyz';
+  const upperCase = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+  const numbers = '0123456789';
+  const symbols = '@#$';
+
+  // Senha "pura" gerada (sem usuário/técnico). A exibição
+  // é montada em atualizarSaida() no formato do chamado.
+  let senhaAtual = '';
+
+  // ============================================
+  // LISTA DE TÉCNICOS (editável, com persistência)
+  // ============================================
+  const TECNICOS_KEY = 'fraseologia-tecnicos';
+  const TECNICOS_PADRAO = [
+    'Gustavo Broio',
+    'Gustavo Mol',
+    'Lucas Souza',
+    'Humbelino Junior',
+    'Gabriel Ramos',
+    'Gabriel Nascimento'
+  ];
+
+  function carregarTecnicos() {
+    try {
+      const salvos = JSON.parse(localStorage.getItem(TECNICOS_KEY));
+      if (Array.isArray(salvos)) {
+        return salvos.filter(t => typeof t === 'string' && t.trim());
+      }
+    } catch (e) { /* localStorage indisponível ou JSON inválido */ }
+    return [...TECNICOS_PADRAO];
+  }
+
+  function salvarTecnicos(lista) {
+    try {
+      localStorage.setItem(TECNICOS_KEY, JSON.stringify(lista));
+    } catch (e) { /* sem persistência disponível */ }
+  }
+
+  function renderizarTecnicos(preferido) {
+    const lista = carregarTecnicos();
+    const anterior = preferido || tecnicoSelect.value;
+
+    tecnicoSelect.innerHTML = '';
+
+    const placeholder = document.createElement('option');
+    placeholder.value = '';
+    placeholder.textContent = lista.length
+      ? '— Selecione o técnico —'
+      : '— Nenhum técnico cadastrado —';
+    tecnicoSelect.appendChild(placeholder);
+
+    lista.forEach(nome => {
+      const opt = document.createElement('option');
+      opt.value = nome;
+      opt.textContent = nome;
+      tecnicoSelect.appendChild(opt);
+    });
+
+    if (anterior && lista.includes(anterior)) {
+      tecnicoSelect.value = anterior;
+    } else {
+      tecnicoSelect.value = '';
+    }
+
+    atualizarSaida();
+  }
+
+  function adicionarTecnico() {
+    const nome = novoTecnicoInput.value.trim();
+    if (!nome) {
+      mostrarToast('⚠️ Digite o nome do técnico para adicionar!', 'warning');
+      return;
+    }
+    const lista = carregarTecnicos();
+    if (lista.some(t => t.toLowerCase() === nome.toLowerCase())) {
+      mostrarToast('⚠️ Este técnico já está na lista!', 'warning');
+      return;
+    }
+    lista.push(nome);
+    salvarTecnicos(lista);
+    novoTecnicoInput.value = '';
+    renderizarTecnicos(nome);
+    mostrarToast('✅ Técnico adicionado: ' + nome, 'success');
+  }
+
+  function removerTecnicoSelecionado() {
+    const nome = tecnicoSelect.value;
+    if (!nome) {
+      mostrarToast('⚠️ Selecione um técnico para remover!', 'warning');
+      return;
+    }
+    if (!confirm('Remover o técnico "' + nome + '" da lista?')) return;
+
+    const lista = carregarTecnicos().filter(t => t !== nome);
+    salvarTecnicos(lista);
+    renderizarTecnicos('');
+    mostrarToast('🗑️ Técnico removido: ' + nome, 'info');
+  }
+
+  // ============================================
+  // SAÍDA NO FORMATO DO CHAMADO:
+  // USUARIO - SENHA GERADA - TEC RESPONSAVEL
+  // (partes vazias são omitidas)
+  // ============================================
+  function atualizarSaida() {
+    const usuario = usuarioInput.value.trim();
+    const tecnico = tecnicoSelect.value;
+
+    const partes = [];
+    if (usuario) partes.push(usuario);
+    if (senhaAtual) partes.push(senhaAtual);
+    if (tecnico) partes.push(tecnico);
+
+    passwordOutput.value = partes.join(' - ');
+  }
+
+  // ============================================
+  // GERAÇÃO DA SENHA
+  // ============================================
+  function generatePassword() {
+    let availableChars = lowerCase;
+    let forcedChars = [];
+
+    if (uppercaseCheck.checked) {
+      availableChars += upperCase;
+      for (let i = 0; i < 2; i++) {
+        forcedChars.push(upperCase[Math.floor(Math.random() * upperCase.length)]);
+      }
+    }
+    if (numbersCheck.checked) {
+      availableChars += numbers;
+      for (let i = 0; i < 2; i++) {
+        forcedChars.push(numbers[Math.floor(Math.random() * numbers.length)]);
+      }
+    }
+    if (symbolsCheck.checked) {
+      availableChars += symbols;
+      for (let i = 0; i < 2; i++) {
+        forcedChars.push(symbols[Math.floor(Math.random() * symbols.length)]);
+      }
+    }
+
+    if (!uppercaseCheck.checked && !numbersCheck.checked && !symbolsCheck.checked) {
+      availableChars = lowerCase;
+      forcedChars = [];
+    }
+
+    const length = parseInt(lengthSlider.value);
+    let password = forcedChars.join('');
+
+    for (let i = password.length; i < length; i++) {
+      const randomIndex = Math.floor(Math.random() * availableChars.length);
+      password += availableChars[randomIndex];
+    }
+
+    password = password.split('').sort(() => Math.random() - 0.5).join('');
+    if (password.length > length) password = password.slice(0, length);
+
+    senhaAtual = password;
+    passwordOutput.value = password;
+    atualizarSaida();
+    updateSecurityIndicator();
+  }
+
+  function updateSecurityIndicator() {
+    const length = parseInt(lengthSlider.value);
+    let score = 0;
+    if (uppercaseCheck.checked) score += 25;
+    if (numbersCheck.checked) score += 25;
+    if (symbolsCheck.checked) score += 30;
+    const lengthScore = Math.min(20, Math.floor((length - 8) * (20 / 24)));
+    score += lengthScore;
+    const percent = Math.min(100, score);
+    securityBar.style.width = `${percent}%`;
+    securityBar.classList.remove('critical', 'warning', 'safe');
+    if (percent < 50) securityBar.classList.add('critical');
+    else if (percent < 70) securityBar.classList.add('warning');
+    else securityBar.classList.add('safe');
+  }
+
+  function copyPassword() {
+    const resultado = passwordOutput.value;
+    if (!resultado) {
+      mostrarToast('⚠️ Nenhuma senha gerada ainda!', 'warning');
+      return;
+    }
+    navigator.clipboard.writeText(resultado).then(() => {
+      mostrarToast('✅ Resultado copiado para a área de transferência!', 'success');
+    }).catch(() => {
+      mostrarToast('❌ Erro ao copiar resultado', 'error');
+    });
+  }
+
+  // ============================================
+  // EVENTOS
+  // ============================================
+  lengthSlider.addEventListener('input', () => {
+    lengthValue.innerText = lengthSlider.value;
+    generatePassword();
+  });
+  uppercaseCheck.addEventListener('change', generatePassword);
+  numbersCheck.addEventListener('change', generatePassword);
+  symbolsCheck.addEventListener('change', generatePassword);
+  renewBtn.addEventListener('click', generatePassword);
+  copyBtn.addEventListener('click', copyPassword);
+
+  usuarioInput.addEventListener('input', atualizarSaida);
+  tecnicoSelect.addEventListener('change', atualizarSaida);
+
+  addTecnicoBtn.addEventListener('click', adicionarTecnico);
+  removeTecnicoBtn.addEventListener('click', removerTecnicoSelecionado);
+  novoTecnicoInput.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') adicionarTecnico();
+  });
+
+  // Ctrl+Enter também gera nova senha nesta página
+  document.addEventListener('keydown', (e) => {
+    if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
+      e.preventDefault();
+      generatePassword();
+    }
+  });
+
+  // ============================================
+  // INICIALIZAÇÃO
+  // ============================================
+  renderizarTecnicos();
+  generatePassword();
+</script>
+
+</body>
+</html>

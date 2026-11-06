@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Fraseologia - Início</title>
+
+  <!-- Tema anti-flash: precisa executar ANTES do CSS ser aplicado -->
+  <script src="js/theme.js"></script>
+
+  <link rel="icon" type="image/x-icon" href="assets/images/serasa_favicon.ico">
+  <link rel="stylesheet" href="css/style.css">
+
+</head>
+
+<!-- HOME: o menu antigo do header fica oculto via CSS (classe pagina-home);
+     aqui a navegação é feita pelo menu em blocos abaixo. Nas páginas internas
+     o menu do header continua igual. -->
+<body class="pagina-home">
+<div class="container">
+
+  <!-- HEADER (topo + menu) carregado dinamicamente -->
+  <div id="header-placeholder"></div>
+
+  <!-- BOAS-VINDAS — o components.js move este bloco para DENTRO do header,
+       fundindo a explicação com o título da página numa coisa só. -->
+  <div class="home-intro">
+    <p>Central de templates da equipe <strong>Field Services</strong>. Escolha uma fraseologia abaixo,
+      preencha os campos e copie o log pronto para o chamado.</p>
+    <div class="home-atalhos">
+      <span>Ctrl + Enter — Gerar log</span>
+      <span>Ctrl + C — Copiar resultado</span>
+      <span>Ctrl + L — Limpar formulário</span>
+    </div>
+  </div>
+
+  <!-- GRID DE TEMPLATES -->
+  <div class="home-grid">
+
+    <a class="template-card" href="pages/inicio_atendimento.html">
+      <span class="card-icone">🚀</span>
+      <span class="card-titulo">Início de Atendimento</span>
+      <span class="card-descricao">Reconhecimento e abertura do atendimento do chamado.</span>
+    </a>
+
+    <a class="template-card" href="pages/tentativa_contato.html">
+      <span class="card-icone">📞</span>
+      <span class="card-titulo">Tentativa de Contato</span>
+      <span class="card-descricao">Registro de tentativas de contato com o usuário.</span>
+    </a>
+
+    <a class="template-card" href="pages/agendamento.html">
+      <span class="card-icone">📅</span>
+      <span class="card-titulo">Agendamento</span>
+      <span class="card-descricao">Data e hora confirmadas para o atendimento.</span>
+    </a>
+
+    <a class="template-card" href="pages/pendente_usuario.html">
+      <span class="card-icone">👤</span>
+      <span class="card-titulo">Pendente Usuário</span>
+      <span class="card-descricao">Chamado aguardando retorno do usuário.</span>
+    </a>
+
+    <a class="template-card" href="pages/pendente_fornecedor.html">
+      <span class="card-icone">🚚</span>
+      <span class="card-titulo">Pendente Fornecedor</span>
+      <span class="card-descricao">Aguardando fornecedor ou entrega de equipamento.</span>
+    </a>
+
+    <a class="template-card" href="pages/pendente_estoque.html">
+      <span class="card-icone">📦</span>
+      <span class="card-titulo">Pendente Estoque</span>
+      <span class="card-descricao">Aguardando disponibilidade de item em estoque.</span>
+    </a>
+
+    <a class="template-card" href="pages/deploy_terceiro.html">
+      <span class="card-icone">🔧</span>
+      <span class="card-titulo">Deploy Terceiro</span>
+      <span class="card-descricao">Equipamento de terceiro — deploy e orientações.</span>
+    </a>
+
+    <a class="template-card" href="pages/substituicao.html">
+      <span class="card-icone">💻</span>
+      <span class="card-titulo">Substituição</span>
+      <span class="card-descricao">Substituição de computador ou periféricos.</span>
+    </a>
+
+    <a class="template-card" href="pages/solicitacao_computador.html">
+      <span class="card-icone">🖥️</span>
+      <span class="card-titulo">Solicitação de Computador</span>
+      <span class="card-descricao">Log de solicitação de computador / notebook.</span>
+    </a>
+
+    <a class="template-card" href="pages/solicitacao_periferico.html">
+      <span class="card-icone">⌨️</span>
+      <span class="card-titulo">Solicitação de Periféricos</span>
+      <span class="card-descricao">Log de solicitação de periféricos.</span>
+    </a>
+
+    <a class="template-card" href="pages/devolucao_estoque.html">
+      <span class="card-icone">↩️</span>
+      <span class="card-titulo">Devolução para Estoque</span>
+      <span class="card-descricao">Devolução de equipamento com link do formulário.</span>
+    </a>
+
+    <a class="template-card" href="pages/encerramento.html">
+      <span class="card-icone">✅</span>
+      <span class="card-titulo">Encerramento</span>
+      <span class="card-descricao">Fechamento do chamado com status Resolved.</span>
+    </a>
+
+    <a class="template-card" href="pages/cancelamento.html">
+      <span class="card-icone">❌</span>
+      <span class="card-titulo">Cancelamento</span>
+      <span class="card-descricao">Abertura indevida ou duplicidade, com evidência.</span>
+    </a>
+
+    <a class="template-card" href="pages/endereco.html">
+      <span class="card-icone">📍</span>
+      <span class="card-titulo">Endereço e CNPJ</span>
+      <span class="card-descricao">Endereço completo e CNPJ por localidade.</span>
+    </a>
+
+    <!-- GERADOR DE SENHA -->
+    <a class="template-card" href="pages/gerador_de_senha.html">
+      <span class="card-icone">🔐</span>
+      <span class="card-titulo">Gerador de Senha</span>
+      <span class="card-descricao">Reset de senha com usuário e técnico responsável.</span>
+    </a>
+
+  </div>
+
+  <!-- FOOTER carregado dinamicamente -->
+  <div id="footer-placeholder"></div>
+
+</div>
+
+<!-- DARK MODE -->
+<button id="darkModeToggle"
+        class="btn-toggle-dark-fixed"
+        onclick="toggleDarkMode()">
+  🌙 Dark Mode
+</button>
+
+<script src="js/main.js"></script>
+<script src="js/components.js"></script>
+
+</body>
+</html>

@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Fraseologia - Pendente Estoque</title>
+
+  <!-- Tema anti-flash: precisa executar ANTES do CSS ser aplicado -->
+  <script src="../js/theme.js"></script>
+
+  <link rel="icon" type="image/x-icon" href="../assets/images/serasa_favicon.ico">
+  <link rel="stylesheet" href="../css/style.css">
+
+</head>
+
+<body>
+<div class="container">
+
+  <!-- HEADER (topo + menu) carregado dinamicamente -->
+  <div id="header-placeholder"></div>
+
+  <!-- CONTEÚDO ESPECÍFICO DA PÁGINA -->
+  <div class="card">
+    <h1>Pendente Estoque</h1>
+    <p>Preencha todos os campos e clique em "Gerar Log".</p>
+    <div class="dica">
+      ⚠️ <strong>Importante:</strong> Status do chamado deve ser <strong>On Hold (Em Espera)</strong> com motivo <strong>Awaiting Vendor (Aguardando Fornecedor)</strong>.
+    </div>
+    <hr>
+
+    <div class="form-grid">
+      <div class="form-group">
+        <label>🔢 Número da REQ / RITM</label>
+        <input type="text" id="chamadoText" placeholder="Ex: REQ123456">
+      </div>
+      <div class="form-group">
+        <label>📝 Motivo da Pendência</label>
+        <textarea id="pendenteText" rows="4" placeholder="Descreva o motivo da pendência..."></textarea>
+      </div>
+    </div>
+
+    <div class="button-group">
+      <button class="btn btn-primary" onclick="gerarLog()">📋 Gerar Log</button>
+      <button class="btn btn-secondary" onclick="copiarLog()">📄 Copiar Log</button>
+      <button class="btn btn-secondary" onclick="limparFormulario()">🗑️ Limpar</button>
+    </div>
+  </div>
+
+  <!-- LOG -->
+  <div class="card">
+    <h3>📝 Log gerado (copie e cole no chamado)</h3>
+    <div class="log-preview" id="Log">
+      Clique em "Gerar Log" para começar
+    </div>
+  </div>
+
+  <!-- FOOTER carregado dinamicamente -->
+  <div id="footer-placeholder"></div>
+
+</div>
+
+<!-- DARK MODE -->
+<button id="darkModeToggle"
+        class="btn-toggle-dark-fixed"
+        onclick="toggleDarkMode()">
+  🌙 Dark Mode
+</button>
+
+<script src="../js/main.js"></script>
+<script src="../js/components.js"></script>
+
+<script>
+window.gerarLog = function() {
+  if (!validarCamposObrigatorios()) return;
+
+  const motivo = document.getElementById('pendenteText').value.trim();
+  const req = document.getElementById('chamadoText').value.trim();
+
+  if (!motivo && !req) {
+    mostrarToast('⚠️ Preencha pelo menos um campo antes de gerar o log!', 'warning');
+    return;
+  }
+
+  let logTexto = '';
+  if (motivo) logTexto += `Motivo da pendência: ${motivo}\n`;
+  if (req) logTexto += `Requisição aberta para Asset: ${req}`;
+
+  document.getElementById('Log').innerHTML = logTexto.replace(/\n/g, '<br>');
+  mostrarToast('✅ Log gerado!', 'success');
+};
+</script>
+
+</body>
+</html>

@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Fraseologia - Endereço e CNPJ</title>
+
+  <!-- Tema anti-flash: precisa executar ANTES do CSS ser aplicado -->
+  <script src="../js/theme.js"></script>
+
+  <link rel="icon" type="image/x-icon" href="../assets/images/serasa_favicon.ico">
+  <link rel="stylesheet" href="../css/style.css">
+
+</head>
+
+<body>
+<div class="container">
+
+  <!-- HEADER (topo + menu) carregado dinamicamente -->
+  <div id="header-placeholder"></div>
+
+  <!-- CONTEÚDO ESPECÍFICO DA PÁGINA -->
+  <div class="card">
+    <h1>Endereço e CNPJ</h1>
+    <p>Selecione a localidade desejada para obter o endereço completo e CNPJ.</p>
+    <div class="dica">
+      💡 As informações são geradas automaticamente com base na localidade escolhida.
+    </div>
+    <hr>
+
+    <div class="form-grid">
+      <div class="form-group">
+        <label>📍 Localidade</label>
+        <select id="localidade">
+          <option value="Endereço portaria 1
+Avenida Presidente Juscelino Kubitscheck
+Nº 100
+Complemento: Serasa Experian
+Bairro: Jardim Nova São Carlos
+Cidade: São Carlos
+Estado: SP
+CEP: 13571-410
+Endereço portaria 2
+Avenida Doutor Heitor José Reali
+Nº 360
+Distrito industrial Miguel Abdelnur
+Cidade: São Carlos
+Estado: SP
+CEP: 13571-385
+Local Serasa Experian
+CNPJ: 62.173.620/0093-06
+IE: Isenta">
+            JK (São Carlos)
+          </option>
+
+          <option value="Serasa Experian – São Paulo
+Av. das Nações Unidas, 14.401 – Torre C (Sucupira), 24º andar
+Cidade: São Paulo
+Estado: SP
+CEP: 04794-000
+CNPJ: 62.173.620/0001-80
+IE: Isento">
+            PDC (São Paulo)
+          </option>
+
+          <option value="Serasa Experian – Blumenau
+Rua Almirante Tamandaré, nº 1024 – Vila Nova
+Cidade: Blumenau
+Estado: SC
+CEP: 89035-000
+CNPJ: 62.173.620/0104-95
+IE: Isento">
+            Blumenau
+          </option>
+
+          <option value="Serasa Experian – Brasília
+SCS QD 02 BL C, 4º andar – Ed. Paulo Sarasate
+Cidade: Brasília
+Estado: DF
+CEP: 70302-911
+CNPJ: 62.173.620/0131-68
+IE: Isento">
+            Brasília
+          </option>
+
+          <option value="Serasa Experian – Recife
+Rua Senador José Henrique, nº 231, 2º andar
+Edifício Charles Darwin – Ilha do Leite
+Cidade: Recife
+Estado: PE
+CEP: 50070-460
+CNPJ: 62.173.620/0133-20
+IE: Isento">
+            Recife
+          </option>
+
+          <option value="SalaryFits Sistemas LTDA
+Alameda Oscar Niemeyer, 132 – Sala 1101 e 1102
+Cidade: Nova Lima
+Estado: MG
+CEP: 34006-049
+CNPJ: 35.674.327/0001-23
+IE: Isento">
+            SalaryFits (Nova Lima)
+          </option>
+        </select>
+      </div>
+    </div>
+
+    <div class="button-group">
+      <button class="btn btn-primary" onclick="gerarLog()">📋 Gerar Log</button>
+      <button class="btn btn-secondary" onclick="copiarLog()">📄 Copiar Log</button>
+      <button class="btn btn-secondary" onclick="limparFormulario()">🗑️ Limpar</button>
+    </div>
+  </div>
+
+  <!-- LOG -->
+  <div class="card">
+    <h3>📝 Log gerado (copie e cole no chamado)</h3>
+    <div class="log-preview" id="Log">
+      Clique em "Gerar Log" para começar
+    </div>
+  </div>
+
+  <!-- FOOTER carregado dinamicamente -->
+  <div id="footer-placeholder"></div>
+
+</div>
+
+<!-- DARK MODE -->
+<button id="darkModeToggle"
+        class="btn-toggle-dark-fixed"
+        onclick="toggleDarkMode()">
+  🌙 Dark Mode
+</button>
+
+<script src="../js/main.js"></script>
+<script src="../js/components.js"></script>
+
+<script>
+window.gerarLog = function() {
+  if (!validarCamposObrigatorios()) return;
+
+  const localidade = document.getElementById('localidade').value;
+
+  if (!localidade) {
+    mostrarToast('⚠️ Selecione uma localidade!', 'warning');
+    return;
+  }
+
+  document.getElementById('Log').innerHTML = localidade.replace(/\n/g, '<br>');
+  mostrarToast('✅ Log gerado!', 'success');
+};
+</script>
+
+</body>
+</html>

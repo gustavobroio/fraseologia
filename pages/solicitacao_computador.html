@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Fraseologia - Solicitação de Computador</title>
+
+  <!-- Tema anti-flash: precisa executar ANTES do CSS ser aplicado -->
+  <script src="../js/theme.js"></script>
+
+  <link rel="icon" type="image/x-icon" href="../assets/images/serasa_favicon.ico">
+  <link rel="stylesheet" href="../css/style.css">
+
+</head>
+
+<body>
+<div class="container">
+
+  <!-- HEADER (topo + menu) carregado dinamicamente -->
+  <div id="header-placeholder"></div>
+
+  <!-- CONTEÚDO ESPECÍFICO DA PÁGINA -->
+  <div class="card">
+    <h1>Solicitação de Computador</h1>
+
+    <div class="info-link">
+      📌 <strong>Formulário de Solicitação de Computador:</strong> 
+      <a href="https://experian.service-now.com/now/nav/ui/classic/params/target/com.glideapp.servicecatalog_cat_item_view.do%3Fv%3D1%26sysparm_id%3D0ec69973db6b13402511fa910f9619cb" target="_blank" rel="noopener">Clique Aqui</a>
+    </div>
+
+    <p>Preencha todos os campos e clique em "Gerar Log".</p>
+
+    <div class="dica">
+      ⚠️ Para solicitação de computador, abra o formulário acima antes de registrar o log.
+    </div>
+    <hr>
+
+    <div class="form-grid">
+      <div class="form-group">
+        <label>👤 Nome do colaborador</label>
+        <input type="text" id="colaborador" placeholder="Nome completo">
+      </div>
+      <div class="form-group">
+        <label>🔑 Login</label>
+        <input type="text" id="login" placeholder="Login de rede">
+      </div>
+      <div class="form-group">
+        <label>📧 E-Mail</label>
+        <input type="email" id="email" placeholder="email@empresa.com">
+      </div>
+      <div class="form-group">
+        <label>📍 Localidade padrão</label>
+        <input type="text" id="localidade" placeholder="Andar, sala, etc.">
+      </div>
+      <div class="form-group">
+        <label>🏢 BU</label>
+        <input type="text" id="bu" placeholder="Unidade de negócio">
+      </div>
+      <div class="form-group">
+        <label>💼 Cargo</label>
+        <input type="text" id="cargo" placeholder="Cargo do colaborador">
+      </div>
+      <div class="form-group">
+        <label>💰 Centro de custo</label>
+        <input type="text" id="centroCusto" placeholder="Centro de custo">
+      </div>
+      <div class="form-group">
+        <label>💻 Tipo de Equipamento</label>
+        <input type="text" id="tipoEquipamento" placeholder="Desktop, Laptop ou MacBook">
+      </div>
+      <div class="form-group">
+        <label>📝 Descrição da solicitação</label>
+        <textarea id="descricao" rows="3" placeholder="Descreva a solicitação..."></textarea>
+      </div>
+      <div class="form-group">
+        <label>🤔 Motivo</label>
+        <textarea id="motivo" rows="3" placeholder="Informe o motivo..."></textarea>
+      </div>
+    </div>
+
+    <div class="button-group">
+      <button class="btn btn-primary" onclick="gerarLog()">📋 Gerar Log</button>
+      <button class="btn btn-secondary" onclick="copiarLog()">📄 Copiar Log</button>
+      <button class="btn btn-secondary" onclick="limparFormulario()">🗑️ Limpar</button>
+    </div>
+  </div>
+
+  <!-- LOG -->
+  <div class="card">
+    <h3>📝 Log gerado (copie e cole no chamado)</h3>
+    <div class="log-preview" id="Log">
+      Clique em "Gerar Log" para começar
+    </div>
+  </div>
+
+  <!-- FOOTER carregado dinamicamente -->
+  <div id="footer-placeholder"></div>
+
+</div>
+
+<!-- DARK MODE -->
+<button id="darkModeToggle"
+        class="btn-toggle-dark-fixed"
+        onclick="toggleDarkMode()">
+  🌙 Dark Mode
+</button>
+
+<script src="../js/main.js"></script>
+<script src="../js/components.js"></script>
+
+<script>
+window.gerarLog = function() {
+  if (!validarCamposObrigatorios()) return;
+
+  const colaborador = document.getElementById('colaborador').value.trim();
+  const login = document.getElementById('login').value.trim();
+  const email = document.getElementById('email').value.trim();
+  const localidade = document.getElementById('localidade').value.trim();
+  const bu = document.getElementById('bu').value.trim();
+  const cargo = document.getElementById('cargo').value.trim();
+  const centroCusto = document.getElementById('centroCusto').value.trim();
+  const tipoEquipamento = document.getElementById('tipoEquipamento').value.trim();
+  const descricao = document.getElementById('descricao').value.trim();
+  const motivo = document.getElementById('motivo').value.trim();
+
+  if (!colaborador && !login && !email && !localidade && !bu && !cargo && !centroCusto && !tipoEquipamento && !descricao && !motivo) {
+    mostrarToast('⚠️ Preencha pelo menos um campo antes de gerar o log!', 'warning');
+    return;
+  }
+
+  let logTexto = '';
+  if (colaborador) logTexto += `Nome do colaborador: ${colaborador}\n`;
+  if (login) logTexto += `Login: ${login}\n`;
+  if (email) logTexto += `E-Mail: ${email}\n`;
+  if (bu) logTexto += `BU: ${bu}\n`;
+  if (cargo) logTexto += `Cargo: ${cargo}\n`;
+  if (centroCusto) logTexto += `Centro de custo: ${centroCusto}\n`;
+  if (localidade) logTexto += `Localidade: ${localidade}\n`;
+  if (tipoEquipamento) logTexto += `Tipo de Equipamento: ${tipoEquipamento}\n`;
+  if (descricao) logTexto += `Descrição da solicitação: ${descricao}\n`;
+  if (motivo) logTexto += `Motivo: ${motivo}`;
+
+  document.getElementById('Log').innerHTML = logTexto.replace(/\n/g, '<br>');
+  mostrarToast('✅ Log gerado!', 'success');
+};
+</script>
+
+</body>
+</html>

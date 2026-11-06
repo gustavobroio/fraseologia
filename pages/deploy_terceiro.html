@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Fraseologia - Deploy Equipamento de Terceiro</title>
+
+  <!-- Tema anti-flash: precisa executar ANTES do CSS ser aplicado -->
+  <script src="../js/theme.js"></script>
+
+  <link rel="icon" type="image/x-icon" href="../assets/images/serasa_favicon.ico">
+  <link rel="stylesheet" href="../css/style.css">
+
+</head>
+
+<body>
+<div class="container">
+
+  <!-- HEADER (topo + menu) carregado dinamicamente -->
+  <div id="header-placeholder"></div>
+
+  <!-- CONTEÚDO ESPECÍFICO DA PÁGINA -->
+  <div class="card">
+    <h1>Deploy Equipamento de Terceiro</h1>
+
+    <div class="info-link">
+      📌 <strong>Formulário de deploy e configuração de equipamento de terceiro:</strong> 
+      <a href="https://experian.service-now.com/now/nav/ui/classic/params/target/com.glideapp.servicecatalog_cat_item_view.do%3Fv%3D1%26sysparm_id%3Da37f3a1cfb0a1ed02aecf4e0aeefdca9" target="_blank">Clique Aqui</a>
+    </div>
+
+    <p>Para esse tipo de chamado, deve-se abrir um chamado no formulário de <strong>SOLICITAÇÃO DE COMPUTADOR</strong> e marcar a opção <strong>DEPLOY</strong>.</p>
+    <br>
+    <p>Para casos de <strong>configuração</strong>, deve-se optar por <strong>CONFIGURAÇÃO DE PERFIL</strong>.</p>
+
+    <div class="dica">
+      ⚠️ <strong>Atenção:</strong> Preencha todos os campos corretamente antes de gerar o log.
+    </div>
+    <hr>
+
+    <div class="form-grid">
+      <div class="form-group">
+        <label>👤 Nome do colaborador</label>
+        <input type="text" id="Colaborador" placeholder="Nome completo">
+      </div>
+      <div class="form-group">
+        <label>🔑 Login</label>
+        <input type="text" id="Login" placeholder="Login de rede">
+      </div>
+      <div class="form-group">
+        <label>📧 E-Mail</label>
+        <input type="email" id="Email" placeholder="email@empresa.com">
+      </div>
+      <div class="form-group">
+        <label>🖥️ Hostname</label>
+        <input type="text" id="Hostname" placeholder="Nome do computador">
+      </div>
+      <div class="form-group">
+        <label>🔢 S/N</label>
+        <input type="text" id="SN" placeholder="Número de série">
+      </div>
+      <div class="form-group">
+        <label>📦 Modelo</label>
+        <input type="text" id="Modelo" placeholder="Ex: Dell Latitude 5420">
+      </div>
+      <div class="form-group">
+        <label>🏢 Empresa</label>
+        <input type="text" id="Empresa" placeholder="Nome da empresa">
+      </div>
+    </div>
+
+    <div class="button-group">
+      <button class="btn btn-primary" onclick="gerarLog()">📋 Gerar Log</button>
+      <button class="btn btn-secondary" onclick="copiarLog()">📄 Copiar Log</button>
+      <button class="btn btn-secondary" onclick="limparFormulario()">🗑️ Limpar</button>
+    </div>
+  </div>
+
+  <!-- LOG -->
+  <div class="card">
+    <h3>📝 Log gerado (copie e cole no chamado)</h3>
+    <div class="log-preview" id="Log">
+      Clique em "Gerar Log" para começar
+    </div>
+  </div>
+
+  <!-- FOOTER carregado dinamicamente -->
+  <div id="footer-placeholder"></div>
+
+</div>
+
+<!-- DARK MODE -->
+<button id="darkModeToggle"
+        class="btn-toggle-dark-fixed"
+        onclick="toggleDarkMode()">
+  🌙 Dark Mode
+</button>
+
+<script src="../js/main.js"></script>
+<script src="../js/components.js"></script>
+
+<script>
+window.gerarLog = function() {
+  if (!validarCamposObrigatorios()) return;
+
+  const colaborador = document.getElementById('Colaborador').value.trim();
+  const login = document.getElementById('Login').value.trim();
+  const email = document.getElementById('Email').value.trim();
+  const hostname = document.getElementById('Hostname').value.trim();
+  const sn = document.getElementById('SN').value.trim();
+  const modelo = document.getElementById('Modelo').value.trim();
+  const empresa = document.getElementById('Empresa').value.trim();
+
+  if (!colaborador && !login && !email && !hostname && !sn && !modelo && !empresa) {
+    mostrarToast('⚠️ Preencha pelo menos um campo antes de gerar o log!', 'warning');
+    return;
+  }
+
+  const logTexto = `Descrição: Efetuar o Deploy no Equipamento disponibilizado pela prestadora de serviço.\n\n` +
+    `Nome: ${colaborador || 'Não informado'}\n` +
+    `Login: ${login || 'Não informado'}\n` +
+    `E-Mail: ${email || 'Não informado'}\n` +
+    `Hostname: ${hostname || 'Não informado'}\n` +
+    `S/N: ${sn || 'Não informado'}\n` +
+    `Modelo: ${modelo || 'Não informado'}\n` +
+    `Empresa: ${empresa || 'Não informado'}`;
+
+  document.getElementById('Log').innerHTML = logTexto.replace(/\n/g, '<br>');
+  mostrarToast('✅ Log gerado!', 'success');
+};
+</script>
+
+</body>
+</html>

@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Fraseologia - Tentativa de contato</title>
+
+  <!-- Tema anti-flash: precisa executar ANTES do CSS ser aplicado -->
+  <script src="../js/theme.js"></script>
+
+  <link rel="icon" type="image/x-icon" href="../assets/images/serasa_favicon.ico">
+  <link rel="stylesheet" href="../css/style.css">
+
+  <style>
+    /* Ajuste para campos de texto ocuparem toda a largura */
+    .form-group.full-width {
+      grid-column: 1 / -1;
+    }
+  </style>
+</head>
+
+<body>
+<div class="container">
+
+  <!-- HEADER (topo + menu) carregado dinamicamente -->
+  <div id="header-placeholder"></div>
+
+  <!-- CONTEÚDO ESPECÍFICO DA PÁGINA -->
+  <div class="card">
+    <h1>Tentativa de contato</h1>
+    <p>Realizar as tentativas de contato a cada período. Ex: se a primeira tentativa for hoje à tarde, a próxima deve ser amanhã de manhã.</p>
+    <div class="dica">
+      ⚠️ <strong>Importante:</strong> Status do chamado deve ser <strong>On Hold (Em Espera)</strong>.<br>
+      Após a 3ª tentativa sem sucesso, o chamado será finalizado.
+    </div>
+    <hr>
+
+    <div class="form-grid">
+      <div class="form-group">
+        <label>📞 Tentativa</label>
+        <select id="tentativa">
+          <option value="Informamos que foi efetuada a 1ª tentativa de contato. Após a 3ª tentativa sem sucesso, seu chamado será finalizado.">1ª tentativa</option>
+          <option value="Informamos que foi efetuada a 2ª tentativa de contato. Após a 3ª tentativa sem sucesso, seu chamado será finalizado.">2ª tentativa</option>
+          <option value="Informamos que foi efetuada a 3ª tentativa de contato sem sucesso e o seu chamado será finalizado. Caso seja necessário, entre em contato conosco para a abertura de um novo.">3ª tentativa</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label>🌞 Período do Contato</label>
+        <select id="periodo">
+          <option value="Bom dia!">Manhã</option>
+          <option value="Boa tarde!">Tarde</option>
+          <option value="Boa noite!">Noite</option>
+        </select>
+      </div>
+
+      <!-- Data e Hora na mesma linha -->
+      <div style="display: flex; gap: 1rem; grid-column: 1 / -1;">
+        <div class="form-group" style="flex: 1;">
+          <label>📅 Data do Contato</label>
+          <input type="date" id="dataContato">
+        </div>
+        <div class="form-group" style="flex: 1;">
+          <label>⏰ Horário do Contato</label>
+          <input type="time" id="horaContato" value="00:00">
+        </div>
+      </div>
+
+      <div class="form-group full-width">
+        <label>💬 Motivo do contato via Teams</label>
+        <textarea id="motivoTeams" rows="3" placeholder="Descreva o motivo do contato via Teams..."></textarea>
+      </div>
+
+      <div class="form-group full-width">
+        <label>📞 Observação via Telefone</label>
+        <textarea id="obsTelefone" rows="3" placeholder="Observação da tentativa de contato por telefone..."></textarea>
+      </div>
+
+      <div class="form-group">
+        <label>👤 Status do colaborador (Teams)</label>
+        <select id="status">
+          <option value="Disponível">Disponível</option>
+          <option value="Ocupado">Ocupado</option>
+          <option value="Ausente">Ausente</option>
+          <option value="Offline">Offline</option>
+          <option value="Apresentando">Apresentando</option>
+          <option value="Em Reunião">Em Reunião</option>
+          <option value="Ausência Temporária">Ausência Temporária</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="button-group">
+      <button class="btn btn-primary" onclick="gerarLog()">📋 Gerar Log</button>
+      <button class="btn btn-secondary" onclick="copiarLog()">📄 Copiar Log</button>
+      <button class="btn btn-secondary" onclick="limparFormulario()">🗑️ Limpar</button>
+    </div>
+  </div>
+
+  <!-- LOG -->
+  <div class="card">
+    <h3>📝 Log gerado (copie e cole no chamado)</h3>
+    <div class="log-preview" id="Log">
+      Clique em "Gerar Log" para começar
+    </div>
+  </div>
+
+  <!-- FOOTER carregado dinamicamente -->
+  <div id="footer-placeholder"></div>
+
+</div>
+
+<!-- DARK MODE -->
+<button id="darkModeToggle"
+        class="btn-toggle-dark-fixed"
+        onclick="toggleDarkMode()">
+  🌙 Dark Mode
+</button>
+
+<script src="../js/main.js"></script>
+<script src="../js/components.js"></script>
+
+<script>
+window.gerarLog = function() {
+  if (!validarCamposObrigatorios()) return;
+
+  const tentativa = document.getElementById('tentativa').value;
+  const periodo = document.getElementById('periodo').value;
+  const data = document.getElementById('dataContato').value;
+  const hora = document.getElementById('horaContato').value;
+  const motivoTeams = document.getElementById('motivoTeams').value.trim();
+  const obsTelefone = document.getElementById('obsTelefone').value.trim();
+  const status = document.getElementById('status').value;
+
+  if (!data) {
+    mostrarToast('⚠️ Por favor, selecione a data do contato!', 'warning');
+    return;
+  }
+
+  const [ano, mes, dia] = data.split('-');
+  const dataFormatada = `${dia}/${mes}/${ano}`;
+
+  let logTexto = `Prezado usuário, ${periodo}\n` +
+    `${tentativa}\n\n` +
+    `Data: ${dataFormatada}\n` +
+    `Horário: ${hora}\n` +
+    `(X) Telefone - Feita a tentativa de contato via telefone, sem sucesso.\n`;
+
+  if (obsTelefone) logTexto += `Obs: ${obsTelefone}\n`;
+  logTexto += `(X) Microsoft Teams - Aguardado o tempo de 05 minutos e não houve retorno.\n` +
+    `Obs: Status no Teams como ${status}\n`;
+  if (motivoTeams) logTexto += `Motivo do Contato: ${motivoTeams}`;
+
+  document.getElementById('Log').innerHTML = logTexto.replace(/\n/g, '<br>');
+  mostrarToast('✅ Log gerado!', 'success');
+};
+</script>
+
+</body>
+</html>

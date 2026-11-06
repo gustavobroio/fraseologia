@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Fraseologia - Encerramento</title>
+
+  <!-- Tema anti-flash: precisa executar ANTES do CSS ser aplicado -->
+  <script src="../js/theme.js"></script>
+
+  <link rel="icon" type="image/x-icon" href="../assets/images/serasa_favicon.ico">
+  <link rel="stylesheet" href="../css/style.css">
+
+</head>
+
+<body>
+<div class="container">
+
+  <!-- HEADER (topo + menu) carregado dinamicamente -->
+  <div id="header-placeholder"></div>
+
+  <!-- CONTEÚDO ESPECÍFICO DA PÁGINA -->
+  <div class="card">
+    <h1>Encerramento de Chamado</h1>
+    <p>Preencha todos os campos e clique em "Gerar Log".</p>
+    <div class="dica">
+      ⚠️ <strong>Importante:</strong> O status do chamado deve ser <strong>Resolved (Resolvido)</strong>.
+    </div>
+    <hr>
+
+    <div class="form-grid">
+      <div class="form-group">
+        <label>🔧 Solução Aplicada</label>
+        <textarea id="solucaoAplicada" rows="4" placeholder="Descreva a solução aplicada..."></textarea>
+      </div>
+      <div class="form-group">
+        <label>📚 Números das KB´s utilizadas</label>
+        <textarea id="kbs" rows="4" placeholder="Ex: KB123456, KB789012..."></textarea>
+      </div>
+      <div class="form-group">
+        <label>✅ Solução validada pelo usuário?</label>
+        <select id="validada">
+          <option value="" disabled selected>Selecione...</option>
+          <option value="Sim">Sim</option>
+          <option value="Não">Não</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="button-group">
+      <button class="btn btn-primary" onclick="gerarLog()">📋 Gerar Log</button>
+      <button class="btn btn-secondary" onclick="copiarLog()">📄 Copiar Log</button>
+      <button class="btn btn-secondary" onclick="limparFormulario()">🗑️ Limpar</button>
+    </div>
+  </div>
+
+  <!-- LOG -->
+  <div class="card">
+    <h3>📝 Log gerado (copie e cole no chamado)</h3>
+    <div class="log-preview" id="Log">
+      Clique em "Gerar Log" para começar
+    </div>
+  </div>
+
+  <!-- FOOTER carregado dinamicamente -->
+  <div id="footer-placeholder"></div>
+
+</div>
+
+<!-- DARK MODE -->
+<button id="darkModeToggle"
+        class="btn-toggle-dark-fixed"
+        onclick="toggleDarkMode()">
+  🌙 Dark Mode
+</button>
+
+<script src="../js/main.js"></script>
+<script src="../js/components.js"></script>
+
+<script>
+window.gerarLog = function() {
+  if (!validarCamposObrigatorios()) return;
+
+  const solucao = document.getElementById('solucaoAplicada').value.trim();
+  const kbs = document.getElementById('kbs').value.trim();
+  const validada = document.getElementById('validada').value.trim();
+
+  if (!solucao && !kbs && !validada) {
+    mostrarToast('⚠️ Preencha pelo menos um campo antes de gerar o log!', 'warning');
+    return;
+  }
+
+  let logTexto = '';
+  if (solucao) logTexto += `Solução Aplicada: ${solucao}\n\n`;
+  if (kbs) logTexto += `Quais os números das KB´s utilizadas na solução? ${kbs}\n\n`;
+  if (validada) logTexto += `A solução aplicada foi validada pelo usuário? ${validada}`;
+
+  logTexto = logTexto.trim();
+
+  document.getElementById('Log').innerHTML = logTexto.replace(/\n/g, '<br>');
+  mostrarToast('✅ Log gerado!', 'success');
+};
+</script>
+
+</body>
+</html>

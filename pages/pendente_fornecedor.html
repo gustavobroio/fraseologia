@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Fraseologia - Pendente Fornecedor</title>
+
+  <!-- Tema anti-flash: precisa executar ANTES do CSS ser aplicado -->
+  <script src="../js/theme.js"></script>
+
+  <link rel="icon" type="image/x-icon" href="../assets/images/serasa_favicon.ico">
+  <link rel="stylesheet" href="../css/style.css">
+
+</head>
+
+<body>
+<div class="container">
+
+  <!-- HEADER (topo + menu) carregado dinamicamente -->
+  <div id="header-placeholder"></div>
+
+  <!-- CONTEÚDO ESPECÍFICO DA PÁGINA -->
+  <div class="card">
+    <h1>Pendente Fornecedor</h1>
+    <p>Preencha todos os campos e clique em "Gerar Log".</p>
+    <div class="dica">
+      ⚠️ <strong>Importante:</strong> Status do chamado deve ser <strong>On Hold (Em Espera)</strong> com motivo <strong>Awaiting Vendor (Aguardando Fornecedor)</strong>.
+    </div>
+    <hr>
+
+    <div class="form-grid">
+      <div class="form-group">
+        <label>🏢 Qual o fornecedor</label>
+        <input type="text" id="fornecedor" placeholder="Ex: Dell, Expedição, etc.">
+      </div>
+      <div class="form-group">
+        <label>📝 Motivo do atendimento</label>
+        <textarea id="motivoAtendimento" rows="3" placeholder="Descreva o motivo do atendimento..."></textarea>
+      </div>
+      <div class="form-group">
+        <label>⏳ Informe o que está pendente com o fornecedor</label>
+        <textarea id="pendenciaFornecedor" rows="3" placeholder="Descreva a pendência..."></textarea>
+      </div>
+
+      <!-- Data e Hora na mesma linha -->
+      <div style="display: flex; gap: 1rem; grid-column: 1 / -1;">
+        <div class="form-group" style="flex: 1;">
+          <label>📅 Data de retorno do Fornecedor</label>
+          <input type="date" id="dataRetorno">
+        </div>
+        <div class="form-group" style="flex: 1;">
+          <label>⏰ Hora de retorno</label>
+          <input type="time" id="horaRetorno" value="09:00">
+        </div>
+      </div>
+    </div>
+
+    <div class="button-group">
+      <button class="btn btn-primary" onclick="gerarLog()">📋 Gerar Log</button>
+      <button class="btn btn-secondary" onclick="copiarLog()">📄 Copiar Log</button>
+      <button class="btn btn-secondary" onclick="limparFormulario()">🗑️ Limpar</button>
+    </div>
+  </div>
+
+  <!-- LOG -->
+  <div class="card">
+    <h3>📝 Log gerado (copie e cole no chamado)</h3>
+    <div class="log-preview" id="Log">
+      Clique em "Gerar Log" para começar
+    </div>
+  </div>
+
+  <!-- FOOTER carregado dinamicamente -->
+  <div id="footer-placeholder"></div>
+
+</div>
+
+<!-- DARK MODE -->
+<button id="darkModeToggle"
+        class="btn-toggle-dark-fixed"
+        onclick="toggleDarkMode()">
+  🌙 Dark Mode
+</button>
+
+<script src="../js/main.js"></script>
+<script src="../js/components.js"></script>
+
+<script>
+window.gerarLog = function() {
+  if (!validarCamposObrigatorios()) return;
+
+  const fornecedor = document.getElementById('fornecedor').value.trim();
+  const motivo = document.getElementById('motivoAtendimento').value.trim();
+  const pendencia = document.getElementById('pendenciaFornecedor').value.trim();
+  const data = document.getElementById('dataRetorno').value;
+  const hora = document.getElementById('horaRetorno').value;
+
+  if (!fornecedor && !motivo && !pendencia && !data) {
+    mostrarToast('⚠️ Preencha pelo menos um campo antes de gerar o log!', 'warning');
+    return;
+  }
+
+  let logTexto = '';
+  if (motivo) logTexto += `Motivo do atendimento: ${motivo}\n`;
+  if (fornecedor) logTexto += `Aguardando o(a): ${fornecedor}\n`;
+  if (pendencia) logTexto += `Motivo da pendência: ${pendencia}\n`;
+  
+  if (data) {
+    const [ano, mes, dia] = data.split('-');
+    const dataFormatada = `${dia}/${mes}/${ano}`;
+    const nomeFornecedor = fornecedor || 'fornecedor';
+    logTexto += `Previsão de retorno do(a) ${nomeFornecedor} em: ${dataFormatada} às ${hora || '--:--'}`;
+  } else {
+    logTexto = logTexto.trim();
+  }
+
+  document.getElementById('Log').innerHTML = logTexto.replace(/\n/g, '<br>');
+  mostrarToast('✅ Log gerado!', 'success');
+};
+</script>
+
+</body>
+</html>

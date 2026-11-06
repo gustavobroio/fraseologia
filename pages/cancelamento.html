@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Fraseologia - Cancelamento</title>
+
+  <!-- Tema anti-flash: precisa executar ANTES do CSS ser aplicado -->
+  <script src="../js/theme.js"></script>
+
+  <link rel="icon" type="image/x-icon" href="../assets/images/serasa_favicon.ico">
+  <link rel="stylesheet" href="../css/style.css">
+
+</head>
+
+<body>
+<div class="container">
+
+  <!-- HEADER (topo + menu) carregado dinamicamente -->
+  <div id="header-placeholder"></div>
+
+  <!-- CONTEÚDO ESPECÍFICO DA PÁGINA -->
+  <div class="card">
+    <h1>Cancelamento</h1>
+    <p>Cancelamento permitido apenas para <strong>abertura indevida</strong> ou <strong>duplicidade</strong>.</p>
+    <div class="dica">
+      🔔 <strong>NÃO ESQUEÇA DE ANEXAR A EVIDÊNCIA DO CANCELAMENTO NO CHAMADO.</strong>
+    </div>
+    <hr>
+
+    <div class="form-grid">
+      <div class="form-group">
+        <label>📋 Tipo de Cancelamento</label>
+        <select id="tipoCancelamento">
+          <option value="">Selecione</option>
+          <option value="indevido">Abertura indevida</option>
+          <option value="duplicado">Duplicidade</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>🔢 Número do chamado correto</label>
+        <input type="text" id="chamadoCorreto" placeholder="Ex: INC123456">
+      </div>
+    </div>
+
+    <div class="button-group">
+      <button class="btn btn-primary" onclick="gerarLog()">📋 Gerar Log</button>
+      <button class="btn btn-secondary" onclick="copiarLog()">📄 Copiar Log</button>
+      <button class="btn btn-secondary" onclick="limparFormulario()">🗑️ Limpar</button>
+    </div>
+  </div>
+
+  <!-- LOG -->
+  <div class="card">
+    <h3>📝 Log gerado (copie e cole no chamado)</h3>
+    <div class="log-preview" id="Log">
+      Clique em "Gerar Log" para começar
+    </div>
+  </div>
+
+  <!-- FOOTER carregado dinamicamente -->
+  <div id="footer-placeholder"></div>
+
+</div>
+
+<!-- DARK MODE -->
+<button id="darkModeToggle"
+        class="btn-toggle-dark-fixed"
+        onclick="toggleDarkMode()">
+  🌙 Dark Mode
+</button>
+
+<script src="../js/main.js"></script>
+<script src="../js/components.js"></script>
+
+<script>
+window.gerarLog = function() {
+  const tipo = document.getElementById('tipoCancelamento').value;
+  const chamado = document.getElementById('chamadoCorreto').value.trim();
+
+  if (!tipo) {
+    mostrarToast('⚠️ Selecione o tipo de cancelamento!', 'warning');
+    return;
+  }
+  if (!chamado) {
+    mostrarToast('⚠️ Informe o número do chamado correto!', 'warning');
+    return;
+  }
+
+  let logTexto = '';
+
+  if (tipo === 'indevido') {
+    logTexto = `Trata-se de um registro indevido de ticket.
+Chamado aberto incorretamente, devendo ser tratado como requisição.
+Chamado correto: ${chamado}.
+Atendimento será realizado através do chamado informado.
+Evidência em anexo.`;
+  } 
+  else if (tipo === 'duplicado') {
+    logTexto = `Trata-se de um chamado duplicado.
+Atendimento será realizado através do chamado: ${chamado}.
+Evidência em anexo.`;
+  }
+
+  document.getElementById('Log').innerHTML = logTexto.replace(/\n/g, '<br>');
+  mostrarToast('✅ Log gerado!', 'success');
+};
+</script>
+
+</body>
+</html>
