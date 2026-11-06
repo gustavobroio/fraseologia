@@ -49,35 +49,9 @@ Fraseologia/
 └── .gitignore
 ```
 
-### Como adicionar uma nova fraseologia
-
-1. Duplique uma página existente em `pages/` (ex.: `agendamento.html`);
-2. Ajuste título, campos e a função `window.gerarLog` da nova página;
-3. Adicione o item no menu em **um único lugar**: `components/header.html`;
-4. (Opcional) Adicione um card na home: `index.html`.
-
-Pronto — o novo item aparece em **todas** as páginas automaticamente.
-
 ---
 
 ## 🛠️ Tecnologias
 
 HTML, CSS e JavaScript puro (sem frameworks, sem build). Aplicação 100% estática —
 qualquer hospedagem de arquivos estáticos serve.
-
----
-
-## 🌐 Deploy (Vercel)
-
-1. Faça push deste repositório para o GitHub;
-2. No Vercel: **Add New → Project → importe o repositório `Fraseologia`**;
-3. Nenhuma configuração extra é necessária (framework: *Other* / estático);
-4. Após o deploy, a home fica disponível na URL raiz do projeto.
-
----
-
-## 📖 Documentação
-
-- [`Documentação.md`](Documentação.md) — propósito, contexto operacional, problemas
-  conhecidos e roadmap oficial de evolução;
-- [`CHANGES.md`](CHANGES.md) — o que mudou nas versões 2.1 e 2.2.
